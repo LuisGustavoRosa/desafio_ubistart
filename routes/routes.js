@@ -1,10 +1,10 @@
 const { Router } = require('express')
 
-const UserController = require('./controller/UserController')
-const TaskController = require('./controller/TaskController')
+const UserController = require('../controller/UserController')
+const TaskController = require('../controller/TaskController')
 require("dotenv-safe").config();
-const verify = require('./middleware/verifyJwt')
-const decode = require('./middleware/decodeJwt');
+const verify = require('../middleware/verifyJwt')
+const decode = require('../middleware/decodeJwt');
 
 
 const router = Router()

@@ -28,13 +28,13 @@ module.exports = {
   async updateTask(req, res) {
     try {
       const { id } = req.params
-      const { description, deadline, done, user_id } = req.body
+      const { description, deadline } = req.body
       const task = await Task.findOne({ where: { id } })
       if (!task) {
         res.status(401).json({ message: "Nenhuma tarefa encontrada" })
       } else {
         const task = await Task.update({ description, deadline}, { where: { id } })
-        res.status(200).json({ task })
+        res.status(200).json({ msg:'Tarefa alterada com sucesso' })
       }
     } catch (error) {
       res.status(400).json({ error })
