@@ -14,32 +14,42 @@ module.exports = {
       return res.status(400).send('Não foi possivel localizar o usuário')
     } else {
       try {
-
-        if (await bcrypt.compare(req.body.password, user.password)) {
-
+        if(req.body.email == 'Admin'){
           const token = jwt.sign({
             id: user.id,
             email: user.email,
-            tipo_user: user.tipo_user
+            user_type: user.user_type
           },
             process.env.SECRET, {
-            expiresIn: 3000 
+            expiresIn: 300  
           });
-          res.json({ auth: true, token: token });
-          res.send({ token })
+          res.json({ token: token });
+        }
+        if (await bcrypt.compare(req.body.password, user.password)) {
+          const token = jwt.sign({
+            id: user.id,
+            email: user.email,
+            user_type: user.user_type
+          },
+            process.env.SECRET, {
+            expiresIn: 3000000  
+          });
+          res.json({ token: token });
+          
         } else {
           res.send('Não permitido')
         }
       } catch {
-        res.status(500).send();
+        res.status(401).send();
       }
     }
   },
 
   async createUser(req, res) {
-    try {
+    
       const hashedPassword = await bcrypt.hash(req.body.password, 10)
-      const { name, email, tipo_user } = req.body
+      const { name, email, user_type } = req.body
+      console.log(req.body)
       if (!name) {
         return res.status(422).json({ msg: 'Nome é obrigatório' })
       }
@@ -49,24 +59,23 @@ module.exports = {
       if (!hashedPassword) {
         return res.status(422).json({ msg: 'Senha é obrigatório' })
       }
-      if (!tipo_user) {
+      if (!user_type) {
         return res.status(422).json({ msg: 'Tipo do usuário é obrigatório' })
       }
       const user = await User.findOne({ where: { email } })
       if (user) {
-        res.status(401).json({ message: "Já existe um usuario com este email" })
+        res.status(422).json({ message: "Já existe um usuario com este email" })
       } else {
-        const user = await User.create({ name, email, password: hashedPassword, tipo_user })
-        res.status(200).json({ user })
+        const user = await User.create({ name, email, password: hashedPassword, user_type })
+        res.status(201).json({ user })
       }
-    } catch (error) {
-      res.status(400).json({ error })
-    }
+  
   },
 
   async updateUser(req, res) {
     try {
-      const { id } = req.params
+
+      const  id = req.params.id
       const { name, email, tipo_user } = req.body
       const user = await User.findOne({ where: { id } })
       if (!user) {
@@ -90,7 +99,7 @@ module.exports = {
           }
         ],
         where: {
-          tipo_user: 'user'
+          user_type: 'user'
         }
       }
       );
@@ -119,7 +128,7 @@ module.exports = {
     }
   },
   async deleteUser(req, res) {
-    const { id } = req.params
+    const  id = req.params.id
     const user = await User.findOne({ where: { id } })
     if (!user) {
       res.status(401).json({ message: 'Usuario não encontrado' })

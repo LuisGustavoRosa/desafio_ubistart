@@ -7,6 +7,7 @@ const verify = require('../middleware/verifyJwt')
 const decode = require('../middleware/decodeJwt');
 
 
+
 const router = Router()
 
 /////////////////////////////////////////USUARIO////////////////////////////////
@@ -32,13 +33,13 @@ router.post('/task-create',verify, TaskController.createTask)
 router.put('/task-update/:id', verify, TaskController.updateTask)
 
 //rota para listar uma tarefa pelo id
-router.get('/task-list/:id',verify, TaskController.listTask)
+router.get('/task-list',verify, TaskController.listTask)
 
 //rota para deletar uma tarefa pelo id
 router.delete('/task-delete/:id',verify, TaskController.deleteTask)
 
 //rota para colocar uma tarefa como concluida
-router.post('/task/done/:id',verify, TaskController.doneTask)
+router.get('/task/done/:id',verify, TaskController.doneTask)
 
 
 
@@ -46,10 +47,10 @@ router.post('/task/done/:id',verify, TaskController.doneTask)
 
 
 //rota para listas todos os usuários com as tarefas
-router.get('/user-list',verify, decode.validate, UserController.listUsers)
+router.get('/user-lists',verify, decode.validate, UserController.listUsers)
 
 //rota para listas todas as tarefas com os usuário
-router.get('/task-list', verify, decode.validate ,TaskController.listTasks)
+router.get('/task-lists', verify, decode.validate ,TaskController.listTasks)
 
 //rota para listas todas as tarefas em atraso
 router.get('/task-late',verify,decode.validate , TaskController.lateTask)
@@ -58,5 +59,8 @@ router.get('/task-late',verify,decode.validate , TaskController.lateTask)
 router.post('/login', UserController.login)
 
 
+
+//router.use('/api-docs', swaggerUi.serve);
+//router.get('/api-docs', swaggerUi.setup(swaggerDocument));
 
 module.exports = router

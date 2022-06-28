@@ -2,38 +2,41 @@
 const Task = require('../models/Task')
 const User = require('../models/User')
 const { Op } = require('sequelize')
+const jwt =  require('jsonwebtoken');
 module.exports = {
   async createTask(req, res) {
-    try {
-     
-      const { description, done, deadline, user_id } = req.body
-      if (!description) {
-        return res.status(422).json({ msg: 'Descrição é obrigatório' })
-      }
-      if (!deadline) {
-        return res.status(422).json({ msg: 'Prazo é obrigatório' })
-      }
-  
-      if (!user_id) {
-        return res.status(422).json({ msg: 'Id do usuário é obrigatório' })
-      }
-      const task = await Task.create({ description, deadline ,done,  user_id })
-      res.status(200).json({ task })
-    } catch (error) {
-      res.status(400).json({ error })
-    }
-  },
 
+      const  userId = req.user.id
+      const { description, done, deadline } = req.body
+      const task = await Task.create({ description, deadline ,done, user_id : userId  })
+      res.status(201).json({ task })
+   
+  },
 
   async updateTask(req, res) {
     try {
-      const { id } = req.params
+      const  id = req.params.id
+      console.log(id)
+      const userId = req.user.id
+      console.log(userId)
+      
       const { description, deadline } = req.body
-      const task = await Task.findOne({ where: { id } })
+      const task = await Task.findOne({ 
+        where: {
+          id : id,
+          user_id : userId
+        },
+      })
+      console.log(task)
       if (!task) {
         res.status(401).json({ message: "Nenhuma tarefa encontrada" })
       } else {
-        const task = await Task.update({ description, deadline}, { where: { id } })
+        const task = await Task.update({ description, deadline}, {    
+          where: {
+            id : id,
+            user_id : userId
+          },
+         })
         res.status(200).json({ msg:'Tarefa alterada com sucesso' })
       }
     } catch (error) {
@@ -43,6 +46,7 @@ module.exports = {
 
   // listas todas as taks com o seus usuários
   async listTasks(req, res) {
+    console.log(req.user)
     try {
       const tasks = await Task.findAll({   
       attributes: ['deadline','done'],
@@ -65,10 +69,12 @@ module.exports = {
 
   // Listar tarefas de um determinado usuário recebendo seu id por parametro
   async listTask(req, res) {
+    const  id = req.user.id
+    console.log(id)
     try {
       const tasks = await Task.findAll({
         where: {
-          user_id: req.params.id
+          user_id: id
         }
       });
       if (!tasks) {
@@ -82,27 +88,54 @@ module.exports = {
 
   // deletar uma task recebendo o id por parametro
   async deleteTask(req, res) {
-    const { id } = req.params
-    const task = await Task.findOne({ where: { id } })
-    if (!task) {
-      res.status(401).json({ message: 'Tarefa não encontrada' })
-    } else {
-      await Task.destroy({ where: { id } })
-      res.status(200).json({ ok: true })
+    try {
+      const  id = req.params.id
+      const userId = req.user.id
+      const task = await Task.findOne({ 
+        where: {
+          id : id,
+          user_id : userId
+        },
+      })
+      console.log(task)
+      if (!task) {
+        res.status(401).json({ message: "Nenhuma tarefa encontrada" })
+      } else {
+        const task = await Task.destroy({  
+          where: {
+            id : id,
+            user_id : userId
+          },
+       })
+        res.status(200).json({ msg:'Tarefa excluida com sucesso' })
+      }
+    } catch (error) {
+      res.status(400).json({ error })
     }
   },
 
   //coclocando a tarefa como concluida recebendo o id por parametro
   async doneTask(req, res) {
     try {
-      const { id } = req.params
-      const task = await Task.findOne({ where: { id } })
+      const  id = req.params.id
+      const userId = req.user.id
+      const task = await Task.findOne({ 
+        where: {
+          id : id,
+          user_id : userId
+        },
+      })
       if (!task) {
         res.status(401).json({ message: "Nenhuma tarefa encontrada" })
       } else {
         const data = new Date()
         
-        const task = await Task.update({ done: 'true', finished : data.toLocaleString()}, { where: { id } })
+        const task = await Task.update({ done: 'true', finished : data.toLocaleString()}, { 
+          where: {
+            id : id,
+            user_id : userId
+          }, 
+        })
         res.status(200).json('tarefa concluida')
       }
     } catch (error) {
@@ -129,7 +162,7 @@ module.exports = {
         }
         ],
         where:{
-          tipo_user : 2
+          user_type: "user"
         }
       });
       

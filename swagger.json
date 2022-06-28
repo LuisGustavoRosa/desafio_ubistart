@@ -1,0 +1,419 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Api de manipulação de tarefas",
+        "description": "Api com o obejtivo de manipular tarefas dos usuários",
+        "contact": {
+            "email": "luis.cardoso@rede.ulbra.br"
+        },
+        "version": "1.0.0",
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http:www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "basePath": "/",
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemes":[
+            "https",
+            "http"
+        ]
+    },
+   
+    "paths": {
+        "/user-create": {
+            "post": {
+                "summary": "Cria um usuário",
+                "tags": [
+                    "User"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "user_type": {
+                                        "type": "enum"
+                                    }
+                                },
+                                "example": {
+                                    "name": "Ferando",
+                                    "email": "fernando@rede.ulbra.br",
+                                    "password": "123456789",
+                                    "user_type": "2"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/user-update/{id}": {
+            "put": {
+                "summary": "Edita o usuário autenticado",
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "name": "Ferando",
+                                    "email": "fernando@rede.ulbra.br",
+                                    "password": "123456789"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/user-list/{id}": {
+            "get": {
+                "summary": "Lista o usuário autenticado",
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/user-delete/{id}": {
+            "delete": {
+                "summary": "Deleta o usuário autenticado",
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/task-create": {
+            "post": {
+                "summary": "Cria uma tarefa do usuário autenticado",
+                "tags": [
+                    "Tasks"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "deadline": {
+                                        "type": "string"
+                                    },
+                                    "done": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "description": "Desafio Ubistart",
+                                    "deadline": "28/07/2022",
+                                    "done": false
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/task-update/{id}": {
+            "put": {
+                "summary": "Edita a tarefa de um usuário alteticado, recebendo o id da tarefa",
+                "tags": [
+                    "Tasks"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "deadline": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "description": "Desafio Ubistart",
+                                    "deadline": "28/07/2022"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/task-list": {
+            "get": {
+                "summary": "Lista as tarefas do usuário autenticado",
+                "tags": [
+                    "Tasks"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/task-delete/{id}": {
+            "delete": {
+                "summary": "Deleta a tarefa do usuário autenticado, recebendo o id da tarefa",
+                "tags": [
+                    "Tasks"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/task/done/{id}": {
+            "get": {
+                "summary": "Coloca a tarefa do usuário autenticado com feita, recebendo o id da tarefa",
+                "tags": [
+                    "Tasks"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/user-lists": {
+            "get": {
+                "summary": "Lista todos os usuários e suas tarefas",
+                "tags": [
+                    "Admin"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/task-lists": {
+            "get": {
+                "summary": "Listas todas as tarefas com os usuários",
+                "tags": [
+                    "Admin"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/task-late": {
+            "get": {
+                "summary": "Lista todas as tarefas que estão com atraso",
+                "tags": [
+                    "Admin"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    }
+}

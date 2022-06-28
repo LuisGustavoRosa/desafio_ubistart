@@ -10,6 +10,7 @@ nodemon rodar o projeto
 
 sequelize db:migrate para subir as tabelas no banco 
 sequelize db:migrate:undo:all para desfazer as tabelas do banco
+sequelize-cli db:seed:all  para inserir o admin por padrão
 
 
 

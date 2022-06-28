@@ -6,7 +6,7 @@ class User extends Model {
       name: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,
-      tipo_user:DataTypes.ENUM('admin','user')
+      user_type:DataTypes.ENUM('admin','user')
     }, {
       sequelize
     })
