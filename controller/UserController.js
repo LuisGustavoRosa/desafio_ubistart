@@ -51,16 +51,16 @@ module.exports = {
       const { name, email, user_type } = req.body
       console.log(req.body)
       if (!name) {
-        return res.status(422).json({ msg: 'Nome é obrigatório' })
+        return res.status(400).json({ msg: 'Nome é obrigatório' })
       }
       if (!email) {
-        return res.status(422).json({ msg: 'Email é obrigatório' })
+        return res.status(400).json({ msg: 'Email é obrigatório' })
       }
       if (!hashedPassword) {
-        return res.status(422).json({ msg: 'Senha é obrigatório' })
+        return res.status(400).json({ msg: 'Senha é obrigatório' })
       }
       if (!user_type) {
-        return res.status(422).json({ msg: 'Tipo do usuário é obrigatório' })
+        return res.status(400).json({ msg: 'Tipo do usuário é obrigatório' })
       }
       const user = await User.findOne({ where: { email } })
       if (user) {

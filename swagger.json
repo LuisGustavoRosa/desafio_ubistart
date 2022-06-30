@@ -21,13 +21,49 @@
                 "bearerFormat": "JWT"
             }
         },
-        "schemes":[
+        "schemes": [
             "https",
             "http"
         ]
     },
-   
     "paths": {
+        "login": {
+            "post": {
+                "summary": "Faz a autenticação ",
+                "tags": [
+                    "Login"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "email": "string",
+                                    "password": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel localizar o usuário"
+                    },
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/user-create": {
             "post": {
                 "summary": "Cria um usuário",
@@ -54,10 +90,10 @@
                                     }
                                 },
                                 "example": {
-                                    "name": "Ferando",
-                                    "email": "fernando@rede.ulbra.br",
-                                    "password": "123456789",
-                                    "user_type": "2"
+                                    "name": "string",
+                                    "email": "string",
+                                    "password": "string",
+                                    "user_type": "enum"
                                 }
                             }
                         }
@@ -101,9 +137,9 @@
                                     }
                                 },
                                 "example": {
-                                    "name": "Ferando",
-                                    "email": "fernando@rede.ulbra.br",
-                                    "password": "123456789"
+                                    "name": "string",
+                                    "email": "string",
+                                    "password": "string"
                                 }
                             }
                         }
@@ -205,8 +241,8 @@
                                     }
                                 },
                                 "example": {
-                                    "description": "Desafio Ubistart",
-                                    "deadline": "28/07/2022",
+                                    "description": "string",
+                                    "deadline": "string",
                                     "done": false
                                 }
                             }
@@ -256,8 +292,8 @@
                                     }
                                 },
                                 "example": {
-                                    "description": "Desafio Ubistart",
-                                    "deadline": "28/07/2022"
+                                    "description": "string",
+                                    "deadline": "string"
                                 }
                             }
                         }

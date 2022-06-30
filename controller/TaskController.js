@@ -8,8 +8,14 @@ module.exports = {
 
       const  userId = req.user.id
       const { description, done, deadline } = req.body
+      if (!description) {
+        return res.status(400).json({ msg: 'Descrição é obrigatória' })
+      }
+      if (!deadline) {
+        return res.status(400).json({ msg: 'Prazo é obrigatório' })
+      }
       const task = await Task.create({ description, deadline ,done, user_id : userId  })
-      res.status(201).json({ task })
+      res.status(200).json({ task })
    
   },
 
@@ -37,7 +43,7 @@ module.exports = {
             user_id : userId
           },
          })
-        res.status(200).json({ msg:'Tarefa alterada com sucesso' })
+        res.status(200).json({ msg:'Tarefa alterada com sucesso' } , task)
       }
     } catch (error) {
       res.status(400).json({ error })
@@ -136,7 +142,7 @@ module.exports = {
             user_id : userId
           }, 
         })
-        res.status(200).json('tarefa concluida')
+        res.status(200).json('tarefa concluida' , task)
       }
     } catch (error) {
       res.status(400).json({ error })
@@ -165,14 +171,12 @@ module.exports = {
           user_type: "user"
         }
       });
-      
+  
       if (!user) {
         res.status(401).json({ message: "Nenhuma tarefa encontrada" })
       } else {
         res.status(200).json({ user })
       }
-    
-
   },
 }
 const formatarData =  (data_) => {
